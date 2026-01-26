@@ -62,8 +62,7 @@ namespace MyProgram
 
         private void Output_result()
         {
-            Console.WriteLine("{0}", this.max);
-            Console.WriteLine("{0}", this.min);
+            Console.WriteLine("{0}\n{1}", this.max, this.min);
         }
 
         private void yeonsanja(int left)
@@ -76,8 +75,9 @@ namespace MyProgram
                 return;
             }
 
-            for(short i=0;i<left; i++)
+            for(short i=0;i<operation_arr.Count; i++)
             {
+                //방문확인 방식으로 한번 바꿔보아라! -> 이따가 할일 !!!!1
                 temp = operation_arr[i];
                 operations.Add(temp);
                 operation_arr.RemoveAt(i);
