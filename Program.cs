@@ -13,8 +13,6 @@ namespace MyProgram
         private List<char> operation_arr;
         private List<char> operations;
 
-
-
         public Operation_BackTraking ()
         {
             string[] input;
@@ -59,6 +57,7 @@ namespace MyProgram
         public void Run()
         {
             this.yeonsanja(this.N - 1);
+            Output_result();
         }
 
         private void Output_result()
@@ -81,19 +80,18 @@ namespace MyProgram
             {
                 temp = operation_arr[i];
                 operations.Add(temp);
-                operation_arr.Remove(temp);
+                operation_arr.RemoveAt(i);
 
                 yeonsanja(left - 1);
 
                 operations.Remove(temp);
-                operation_arr.Add(temp);
+                operation_arr.Insert(i, temp);
             }
         }
 
         private void yeonSan()
         {
             int result = 0;
-
             switch(operations[0])
             {
                 case '+':
@@ -110,7 +108,7 @@ namespace MyProgram
                     break;
             };
 
-            for (int i = 2; i < this.N - 1; i++)
+            for (int i = 2; i <= this.N - 1; i++)
             {
                 switch (operations[i - 1])
                 {
@@ -154,9 +152,8 @@ namespace MyProgram
         static void Main(string[] args)
         {
             Operation_BackTraking opb = new Operation_BackTraking();
-
-
-
+            opb.Run();
+            return;
         }
     }
 }
