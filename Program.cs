@@ -5,8 +5,8 @@ namespace MyProgram
 {
     class Operation_BackTraking
     {
-        private long max;
-        private long min;
+        private int? max;
+        private int? min;
 
         private short N;
         private short[] arr;
@@ -52,28 +52,100 @@ namespace MyProgram
                 operation_arr.Add('/');
 
             operations = new List<char>();
+            this.max = null;
+            this.min = null;
         }
 
         public void Run()
         {
-            long result = 0;
-            int index;
-            index = (this.N - 1);
+            this.yeonsanja(this.N - 1);
         }
 
-        private void yeonsanja(int index)
+        private void Output_result()
         {
-            for(short i=0;i<index;i++)
+            Console.WriteLine("{0}", this.max);
+            Console.WriteLine("{0}", this.min);
+        }
+
+        private void yeonsanja(int left)
+        {
+            char temp;
+
+            if(left <= 0)
             {
-                operations.Add(operation_arr[i]);
-                yeonsanja(index - 1);
-                operations.Remove(operation_arr[i]);
+                yeonSan();
+                return;
+            }
+
+            for(short i=0;i<left; i++)
+            {
+                temp = operation_arr[i];
+                operations.Add(temp);
+                operation_arr.Remove(temp);
+
+                yeonsanja(left - 1);
+
+                operations.Remove(temp);
+                operation_arr.Add(temp);
             }
         }
 
-        private long yeonSan()
+        private void yeonSan()
         {
-            return 0;
+            int result = 0;
+
+            switch(operations[0])
+            {
+                case '+':
+                    result = this.arr[0] + this.arr[1];
+                    break;
+                case '-':
+                    result = this.arr[0] - this.arr[1];
+                    break;
+                case '*':
+                    result = this.arr[0] * this.arr[1];
+                    break;
+                case '/':
+                    result = this.arr[0] / this.arr[1];
+                    break;
+            };
+
+            for (int i = 2; i < this.N - 1; i++)
+            {
+                switch (operations[i - 1])
+                {
+                    case '+':
+                        result += this.arr[i];
+                        break;
+                    case '-':
+                        result -= this.arr[i];
+                        break;
+                    case '*':
+                        result *= this.arr[i];
+                        break;
+                    case '/':
+                        result /= this.arr[i];
+                        break;
+                }
+                ;
+            }
+
+            if (this.max == null || this.min == null)
+            {
+                this.max = result;
+                this.min = result;
+            }
+            else
+            {
+                if(this.max<result)
+                {
+                    this.max = result;
+                }
+                if(this.min>result)
+                {
+                    this.min = result;
+                }
+            }
         }
 
     }
