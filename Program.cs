@@ -5,12 +5,12 @@ namespace MyProgram
 {
     class Operation_BackTraking
     {
-        private int? max;
-        private int? min;
+        private int max;
+        private int min;
 
         private short N;
         private short[] arr;
-        private List<char> operation_arr;
+        private List<(char,bool)> operation_arr;
         private List<char> operations;
 
         public Operation_BackTraking ()
@@ -38,20 +38,20 @@ namespace MyProgram
             gophagi = Int16.Parse(input[2]);
             nanugi = Int16.Parse(input[3]);
 
-            operation_arr = new List<char>();
+            operation_arr = new List<(char,bool)>();
 
             for (short i = 0; i < deohagi; i++)
-                operation_arr.Add('+');
+                operation_arr.Add(('+',true));
             for (short i = 0; i < ppagi; i++)
-                operation_arr.Add('-');
+                operation_arr.Add(('-',true));
             for (short i = 0; i < gophagi; i++)
-                operation_arr.Add('*');
+                operation_arr.Add(('*',true));
             for (short i = 0; i < nanugi; i++)
-                operation_arr.Add('/');
+                operation_arr.Add(('/',true));
 
             operations = new List<char>();
-            this.max = null;
-            this.min = null;
+            this.max = Int32.MinValue;
+            this.min = Int32.MaxValue;
         }
 
         public void Run()
@@ -68,8 +68,9 @@ namespace MyProgram
         private void yeonsanja(int left)
         {
             char temp;
+            bool isused;
 
-            if(left <= 0)
+            if(left == 0)
             {
                 yeonSan();
                 return;
@@ -77,72 +78,53 @@ namespace MyProgram
 
             for(short i=0;i<operation_arr.Count; i++)
             {
-                //방문확인 방식으로 한번 바꿔보아라! -> 이따가 할일 !!!!1
-                temp = operation_arr[i];
-                operations.Add(temp);
-                operation_arr.RemoveAt(i);
+                //방문확인 방식으로 한번 바꿔보아라! -> 이따가 할일 !!!!
+                var (op,canuse) = operation_arr[i];
 
-                yeonsanja(left - 1);
-
-                operations.Remove(temp);
-                operation_arr.Insert(i, temp);
+                if (canuse == true)
+                {
+                    operations.Add(op);
+                    operation_arr[i] = (op, false);
+                    yeonsanja(left - 1);
+                    operation_arr[i] = (op, true);
+                    operations.RemoveAt(operations.Count-1);
+                }
+               
             }
         }
 
         private void yeonSan()
         {
-            int result = 0;
-            switch(operations[0])
-            {
-                case '+':
-                    result = this.arr[0] + this.arr[1];
-                    break;
-                case '-':
-                    result = this.arr[0] - this.arr[1];
-                    break;
-                case '*':
-                    result = this.arr[0] * this.arr[1];
-                    break;
-                case '/':
-                    result = this.arr[0] / this.arr[1];
-                    break;
-            };
+            int result = arr[0];
 
-            for (int i = 2; i <= this.N - 1; i++)
+            for (int i = 0; i < operations.Count; i++)
             {
-                switch (operations[i - 1])
+                switch (operations[i])
                 {
                     case '+':
-                        result += this.arr[i];
+                        result += this.arr[i+1];
                         break;
                     case '-':
-                        result -= this.arr[i];
+                        result -= this.arr[i+1];
                         break;
                     case '*':
-                        result *= this.arr[i];
+                        result *= this.arr[i+1];
                         break;
                     case '/':
-                        result /= this.arr[i];
+                        result /= this.arr[i+1];
                         break;
                 }
                 ;
             }
 
-            if (this.max == null || this.min == null)
+       
+            if(this.max<result)
             {
                 this.max = result;
-                this.min = result;
             }
-            else
+            if (this.min > result)
             {
-                if(this.max<result)
-                {
-                    this.max = result;
-                }
-                if(this.min>result)
-                {
-                    this.min = result;
-                }
+                this.min = result;
             }
         }
 
